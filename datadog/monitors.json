@@ -1,0 +1,1 @@
+{"monitors": [{"name": "Hallucination", "query": "avg:aegis.llm.hallucination > 0.7"}]}

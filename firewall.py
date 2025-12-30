@@ -1,9 +1,11 @@
-import vertexai
-from vertexai.generative_models import GenerativeModel
+import google.generativeai as genai
+import os
+from utils_retry import retry_with_backoff
 
-vertexai.init()
-model = GenerativeModel("text-bison@001")
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+model = genai.GenerativeModel("gemini-3-flash-preview")
 
+@retry_with_backoff()
 def check_firewall(prompt):
     resp = model.generate_content(f"Is this prompt safe? Answer yes or no: {prompt}")
     allowed = "yes" in resp.text.lower()

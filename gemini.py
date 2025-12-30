@@ -1,13 +1,14 @@
+import google.generativeai as genai
+import os
+from utils_retry import retry_with_backoff
 
-import vertexai
-from vertexai.generative_models import GenerativeModel
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
-vertexai.init()
+firewall_model = genai.GenerativeModel("gemini-3-flash-preview")
+governance_model = genai.GenerativeModel("gemini-3-flash-preview")
+inference_model = genai.GenerativeModel("gemini-3-flash-preview")
 
-firewall_model = GenerativeModel("text-bison@001")
-governance_model = GenerativeModel("text-bison@001")
-inference_model = GenerativeModel("text-bison@001")
-
+@retry_with_backoff()
 def infer(prompt:str)->str:
     resp = inference_model.generate_content(prompt)
     return resp.text

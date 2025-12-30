@@ -12,7 +12,8 @@ def emit_metrics(prompt, output, fw, gov):
     cost = (tokens_in + tokens_out) * 0.000002  # mock $/token for demo
 
     series = [
-        {"metric": "aegis.llm.requests", "points": [[ts, 1]]},
+        {"metric": "aegis.llm.requests", "points": [[ts, 1]], "type": "count"},
+        {"metric": "aegis.llm.errors", "points": [[ts, 1 if error else 0]], "type": "count"},
         {"metric": "aegis.llm.firewall.blocked", "points": [[ts, 1 if not fw["allowed"] else 0]], "type": "count"},
         {"metric": "aegis.llm.hallucination", "points": [[ts, gov.get("hallucination", 0.0)]]},
         {"metric": "aegis.llm.tokens_in", "points": [[ts, tokens_in]]},

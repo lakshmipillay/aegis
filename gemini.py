@@ -4,9 +4,10 @@ from utils_retry import retry_with_backoff
 
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
-firewall_model = genai.GenerativeModel("gemini-3-flash-preview")
-governance_model = genai.GenerativeModel("gemini-3-flash-preview")
-inference_model = genai.GenerativeModel("gemini-3-flash-preview")
+model_name = os.environ.get("GEMINI_MODEL_NAME", "gemini-3-flash-preview")
+firewall_model = genai.GenerativeModel(model_name)
+governance_model = genai.GenerativeModel(model_name)
+inference_model = genai.GenerativeModel(model_name)
 
 @retry_with_backoff()
 def infer(prompt:str)->str:

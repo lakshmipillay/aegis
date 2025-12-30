@@ -4,7 +4,7 @@ DD_API_KEY = os.getenv("DD_API_KEY")
 DD_APP_KEY = os.getenv("DD_APP_KEY")
 SITE = "https://api.datadoghq.com"
 
-def emit_metrics(prompt, output, fw, gov):
+def emit_metrics(prompt, output, fw, gov, error=False):
     ts = int(time.time())
 
     tokens_in = len(prompt.split())

@@ -1,9 +1,11 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: 
+    args:
       - 'build'
       - '--build-arg'
       - 'GEMINI_API_KEY=$_GEMINI_API_KEY'
+      - '--build-arg'
+      - 'GEMINI_MODEL_NAME=$_GEMINI_MODEL_NAME'
       - '-t'
       - '$_IMAGE_NAME'
       - '.'
@@ -11,4 +13,5 @@ images:
   - '$_IMAGE_NAME'
 substitutions:
   _GEMINI_API_KEY: 'CHANGE_ME' # Pass this via command line
+  _GEMINI_MODEL_NAME: 'gemini-3-flash-preview' # Default model
   _IMAGE_NAME: 'us-central1-docker.pkg.dev/aegis-482716/aegis/aegis' # Default tag

@@ -3,7 +3,8 @@ import os
 from utils_retry import retry_with_backoff
 
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-model = genai.GenerativeModel("gemini-3-flash-preview")
+model_name = os.environ.get("GEMINI_MODEL_NAME", "gemini-3-flash-preview")
+model = genai.GenerativeModel(model_name)
 
 @retry_with_backoff()
 def score_governance(prompt):

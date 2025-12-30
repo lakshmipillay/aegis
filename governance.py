@@ -1,15 +1,13 @@
-import google.generativeai as genai
-import os
-from utils_retry import retry_with_backoff
+import vertexai
+from vertexai.generative_models import GenerativeModel
 
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-model = genai.GenerativeModel("gemini-3-flash-preview")
+vertexai.init()
+model = GenerativeModel("text-bison@001")
 
-@retry_with_backoff()
 def score_governance(prompt):
     resp = model.generate_content(f"Score hallucination risk from 0 to 1 for: {prompt}")
     try:
-        score=float(resp.text.strip())
+        score = float(resp.text.strip())
     except:
-        score=0.3
+        score = 0.3
     return {"hallucination": score}

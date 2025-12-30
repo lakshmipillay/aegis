@@ -12,7 +12,7 @@ def check_regions(project_id):
     # Common regions for GenAI
     regions = ["us-central1", "us-west1", "us-east4", "europe-west1", "asia-northeast1"]
     
-    model_name = "gemini-1.5-flash-001"
+    model_name = "gemini-2.5-flash"
     
     any_success = False
     

@@ -9,12 +9,12 @@ def version_check():
 def list_models_simple(project_id, location):
     vertexai.init(project=project_id, location=location)
     try:
-        model = GenerativeModel("gemini-1.5-flash-001")
-        print(f"Successfully initialized model: gemini-1.5-flash-001")
+        model = GenerativeModel("gemini-2.5-flash")
+        print(f"Successfully initialized model: gemini-2.5-flash")
         response = model.generate_content("Hello")
         print(f"Successfully generated content: {response.text}")
     except Exception as e:
-        print(f"Error accessing gemini-1.5-flash-001: {e}")
+        print(f"Error accessing gemini-2.5-flash: {e}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

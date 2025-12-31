@@ -22,13 +22,18 @@ def emit_metrics(prompt, output, fw, gov, error=False):
 
     # 1. Custom Metrics (Keep existing manual push if desired, or migrate to statsd)
     series = [
+        # Event counters
         {"metric": "aegis.llm.requests", "points": [[ts, 1]], "type": "count"},
         {"metric": "aegis.llm.errors", "points": [[ts, 1 if error else 0]], "type": "count"},
         {"metric": "aegis.llm.firewall.blocked", "points": [[ts, 1 if not fw["allowed"] else 0]], "type": "count"},
-        {"metric": "aegis.llm.hallucination", "points": [[ts, gov.get("hallucination", 0.0)]]},
-        {"metric": "aegis.llm.tokens_in", "points": [[ts, tokens_in]]},
-        {"metric": "aegis.llm.tokens_out", "points": [[ts, tokens_out]]},
-        {"metric": "aegis.llm.cost_usd", "points": [[ts, cost]]},
+
+        # Measurements
+        {"metric": "aegis.llm.hallucination", "points": [[ts, gov.get("hallucination", 0.0)]], "type": "gauge"},
+        {"metric": "aegis.llm.cost_usd", "points": [[ts, cost]], "type": "gauge"},
+
+        # Throughput
+        {"metric": "aegis.llm.tokens_in", "points": [[ts, tokens_in]], "type": "count"},
+        {"metric": "aegis.llm.tokens_out", "points": [[ts, tokens_out]], "type": "count"},
     ]
 
     try:

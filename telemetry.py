@@ -65,12 +65,16 @@ def emit_metrics(prompt, output, fw, gov, error=False):
                 },
                 tags={
                     "env": "prod",
+                    "service": "aegis",
+                    "firewall": "enabled",
                     "version": "v1"
                 }
             )
+
+            if not fw["allowed"]:
+                span.set_error(message="Blocked by AEGIS firewall")
             
             if error:
-                span.set_error(message="Inference failed")
-                
+                span.set_error(message="Inference failed")               
     except Exception as e:
          print(f"Error sending LLM Trace: {e}")

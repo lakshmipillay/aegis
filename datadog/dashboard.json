@@ -1,1 +1,111 @@
-{"title": "AEGIS", "widgets": []}
+{
+    "title": "AEGIS – AI Control Plane",
+    "description": "End-to-end observability for the AEGIS LLM Firewall, Governance, and Cost Control system",
+    "widgets": [
+        {
+            "id": 1521521652366617,
+            "definition": {
+                "title": "LLM Requests",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:aegis.llm.requests{*}"
+                            }
+                        ],
+                        "style": {
+                            "palette": "dog_classic"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7739750028759105,
+            "definition": {
+                "title": "Hallucination Risk",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "avg:aegis.llm.hallucination{*}"
+                            }
+                        ],
+                        "style": {
+                            "palette": "warm"
+                        },
+                        "display_type": "line"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 55598133156006,
+            "definition": {
+                "title": "Firewall Blocks",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:aegis.llm.firewall.blocked{*}"
+                            }
+                        ],
+                        "style": {
+                            "palette": "red"
+                        },
+                        "display_type": "bars"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4252906014989896,
+            "definition": {
+                "title": "LLM Cost (USD)",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "query": "sum:aegis.llm.cost_usd{*}"
+                            }
+                        ],
+                        "style": {
+                            "palette": "cool"
+                        },
+                        "display_type": "area"
+                    }
+                ]
+            }
+        }
+    ],
+    "template_variables": [],
+    "layout_type": "ordered",
+    "notify_list": [],
+    "reflow_type": "auto",
+    "pause_auto_refresh": false
+}

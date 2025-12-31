@@ -1,1 +1,130 @@
-{"monitors": [{"name": "Hallucination", "query": "avg:aegis.llm.hallucination > 0.7"}]}
+[
+    {
+        "id": 247680498,
+        "name": "AEGIS - Gemini Safety Breach",
+        "type": "query alert",
+        "query": "llm-observability(\"@ml_app:aegis @meta.model_provider:google\").rollup(\"count\").last(\"5m\") > 0.6",
+        "message": "{{#is_alert}} 🚨 AEGIS Safety Alert\n\nA Gemini request violated safety policy.\n\n- Model: {{meta.model_name}} \n- Provider: {{@meta.model_provider}} \n- Hallucination score: {{metrics.hallucination_score}} \n- Blocked by firewall: {{@metrics.blocked}} \n- Input tokens: {{@metrics.input_token_count}} \n- Output tokens: {{@metrics.output_token_count}}\n\nPrompt: {{@input.messages.0.content}}\n\nResponse: {{@output.messages.0.content}}\n\nThis event was detected by Datadog LLM Observability. {{/is_alert}}\n\n{{#is_recovery}} ✅ AEGIS safety metrics are back within normal range. {{/is_recovery}} \n@incident-\n@webhook-Aegis-Patch",
+        "tags": [
+            "service:aegis",
+            "signal:security"
+        ],
+        "options": {
+            "thresholds": {
+                "critical": 0.6
+            },
+            "enable_logs_sample": false,
+            "notify_audit": false,
+            "on_missing_data": "default",
+            "include_tags": false,
+            "new_host_delay": 300,
+            "groupby_simple_monitor": false
+        },
+        "priority": null,
+        "draft_status": "published"
+    },
+    {
+        "id": 247502116,
+        "name": "AEGIS Firewall Attack Detector",
+        "type": "query alert",
+        "query": "sum(last_5m):sum:aegis.llm.firewall.blocked{*} > 2",
+        "message": "@incident- 🚨 Possible LLM attack detected. More than 5 unsafe prompts blocked in 5 minutes.\n\nRunbook:\n- Inspect blocked prompts\n- Look for injection or abuse\n- Rotate API keys if needed",
+        "tags": [
+            "service:aegis",
+            "signal:security"
+        ],
+        "options": {
+            "thresholds": {
+                "critical": 2
+            },
+            "notify_audit": false,
+            "timeout_h": 0,
+            "require_full_window": false,
+            "renotify_interval": 0,
+            "escalation_message": "",
+            "include_tags": true,
+            "on_missing_data": "show_no_data",
+            "new_host_delay": 300
+        },
+        "priority": null,
+        "draft_status": "published"
+    },
+    {
+        "id": 247502286,
+        "name": "AEGIS Hallucination Drift",
+        "type": "query alert",
+        "query": "avg(last_10m):avg:aegis.llm.hallucination{*} > 0.7",
+        "message": "🧠 Model drift detected. Hallucination risk > 0.7.\n\nRunbook:\n- Inspect recent prompts\n- Reduce temperature\n- Check grounding or RAG freshness",
+        "tags": [
+            "service:aegis",
+            "signal:quality"
+        ],
+        "options": {
+            "thresholds": {
+                "critical": 0.7
+            },
+            "notify_audit": false,
+            "require_full_window": false,
+            "renotify_interval": 0,
+            "escalation_message": "",
+            "include_tags": true,
+            "on_missing_data": "default",
+            "new_host_delay": 300
+        },
+        "priority": null,
+        "draft_status": "published"
+    },
+    {
+        "id": 247502350,
+        "name": "AEGIS LLM Cost Anomaly",
+        "type": "metric alert",
+        "query": "sum(last_1h):sum:aegis.llm.cost_usd{*} > 5",
+        "message": "💸 LLM cost anomaly. Spend exceeded $5 in last hour.\n\nRunbook:\n- Identify traffic spikes\n- Rate-limit heavy users\n- Check for abuse",
+        "tags": [
+            "service:aegis",
+            "signal:finance"
+        ],
+        "options": {
+            "notify_audit": false,
+            "timeout_h": 0,
+            "no_data_timeframe": null,
+            "require_full_window": false,
+            "new_host_delay": 300,
+            "notify_no_data": false,
+            "renotify_interval": 0,
+            "escalation_message": "",
+            "thresholds": {
+                "critical": 5
+            },
+            "include_tags": true
+        },
+        "priority": null,
+        "draft_status": "published"
+    },
+    {
+        "id": 247503878,
+        "name": "AEGIS LLM Errors",
+        "type": "query alert",
+        "query": "sum(last_5m):sum:aegis.llm.errors{*} > 0",
+        "message": "🔥 AEGIS is experiencing runtime failures.\n\nRunbook:\n1. Check Cloud Run logs\n2. Inspect Gemini API responses\n3. Validate API keys and quotas",
+        "tags": [
+            "service:aegis",
+            "signal:reliability"
+        ],
+        "options": {
+            "thresholds": {
+                "critical": 0
+            },
+            "notify_audit": false,
+            "timeout_h": 0,
+            "require_full_window": false,
+            "renotify_interval": 0,
+            "escalation_message": "",
+            "include_tags": true,
+            "on_missing_data": "show_no_data",
+            "new_host_delay": 300
+        },
+        "priority": null,
+        "draft_status": "published"
+    }
+]

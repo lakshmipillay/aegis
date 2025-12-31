@@ -30,3 +30,28 @@ def emit_metrics(prompt, output, fw, gov, error=False):
         json={"series": series},
         timeout=3,
     )
+
+    requests.post(
+      f"{SITE}/api/v2/llm/traces",
+      headers={
+        "DD-API-KEY": DD_API_KEY,
+        "DD-APPLICATION-KEY": DD_APP_KEY,
+        "Content-Type": "application/json"
+      },
+      json={
+        "data": [{
+          "type": "llm_trace",
+          "attributes": {
+            "service": "aegis",
+            "model": "AEGIS-Gemini",
+            "prompt": prompt,
+            "response": output,
+            "tokens_in": tokens_in,
+            "tokens_out": tokens_out,
+            "hallucination": gov["hallucination"],
+            "blocked": not fw["allowed"]
+          }
+        }]
+      }
+    )
+

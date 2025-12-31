@@ -31,27 +31,44 @@ def emit_metrics(prompt, output, fw, gov, error=False):
         timeout=3,
     )
 
-    requests.post(
-      f"{SITE}/api/v2/llm/traces",
+    r = requests.post(
+      "https://llmobs.datadoghq.com/api/v2/llm/traces",
       headers={
         "DD-API-KEY": DD_API_KEY,
         "DD-APPLICATION-KEY": DD_APP_KEY,
         "Content-Type": "application/json"
       },
       json={
-        "data": [{
-          "type": "llm_trace",
-          "attributes": {
-            "service": "aegis",
-            "model": "AEGIS-Gemini",
-            "prompt": prompt,
-            "response": output,
-            "tokens_in": tokens_in,
-            "tokens_out": tokens_out,
-            "hallucination": gov["hallucination"],
-            "blocked": not fw["allowed"]
-          }
-        }]
-      }
-    )
+        "data": [
+            {
+                "type": "llm_trace",
+                "attributes": {
+                    "ml_app": "aegis",
+                    "model": "gemini",
+                    "provider": "google",
+                    "service": "aegis",
+                    "env": "prod",
+                    "prompt": {
+                        "messages": [
+                            { "role": "user", "content": prompt }
+                        ]
+                    },
+                    "response": {
+                        "messages": [
+                            { "role": "assistant", "content": output }
+                        ]
+                    },
+                    "metrics": {
+                        "tokens_in": tokens_in,
+                        "tokens_out": tokens_out,
+                        "hallucination": gov.get("hallucination", 0),
+                        "blocked": not fw["allowed"]
+                    }
+                }
+            }
+        ]
+    },
+    timeout=3
+)
 
+    print("LLM TRACE:", r.status_code, r.text)
